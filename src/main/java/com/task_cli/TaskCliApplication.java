@@ -1,13 +1,13 @@
-package com.taks_cli;
+package com.task_cli;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class TaksCliApplication {
+public class TaskCliApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(TaksCliApplication.class, args);
+		SpringApplication.run(TaskCliApplication.class, args);
 	}
 
 }
