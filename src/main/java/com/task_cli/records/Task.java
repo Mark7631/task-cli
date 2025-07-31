@@ -9,12 +9,7 @@ import java.util.UUID;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public record Task (
-        UUID id,
         String task,
         String status
 ) {
-    @Override
-    public String toString() {
-        return String.format("%s | %s | %s", id.toString(), task, status);
-    }
 }

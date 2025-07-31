@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.*;
 
 @Slf4j
@@ -25,15 +24,20 @@ public class TaskRepositoryImpl implements TaskRepository {
         try {
             File file = new File(repoFilePath);
             ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, Task> map;
+            List<Task> tasks;
             if (file.length() != 0) {
-                map = objectMapper.readValue(file, Map.class);
-                if (map.get(task) != null) return RepositoryResponse.UNABLE_TASK;
+                tasks = objectMapper.readValue(file, new TypeReference<List<Task>>() {});
+                boolean isBusy = false;
+                for (Task t : tasks) {
+                    isBusy = t.task().equalsIgnoreCase(task);
+                    if (isBusy) break;
+                }
+                if (isBusy) return RepositoryResponse.UNABLE_TASK;
             } else {
-                map = new HashMap<>();
+                tasks = new ArrayList<>();
             }
-            map.put(task, new Task(UUID.randomUUID(), task, status));
-            objectMapper.writeValue(file, map);
+            tasks.add(new Task(task, status));
+            objectMapper.writeValue(file, tasks);
             return RepositoryResponse.OK;
         } catch (IOException e) {
             log.error(e.getMessage());
@@ -48,11 +52,7 @@ public class TaskRepositoryImpl implements TaskRepository {
         if (file.length() == 0) return new TaskListResponse(RepositoryResponse.FILE_IS_EMPTY, new ArrayList<>());
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            Map<String, Task> map = objectMapper.readValue(file, new TypeReference<Map<String, Task>>() {});
-            List<Task> tasks = new ArrayList<>();
-            for (Task task : map.values()) {
-                tasks.add(task);
-            }
+            List<Task> tasks = objectMapper.readValue(file, new TypeReference<List<Task>>() {});
             TaskListResponse response;
             if (statusFilter.equals("none")) {
                 response = new TaskListResponse(RepositoryResponse.OK, tasks);

@@ -53,8 +53,27 @@ public class TaskCommandHandler {
             case OK:
                 List<Task> tasks = taskListResponse.taskList();
                 if (tasks.isEmpty()) return "no tasks";
-                StringBuilder out = new StringBuilder().append("id                                   | task | status\n");
-                tasks.forEach(task -> out.append(task.toString()).append("\n"));
+                int maxTaskLen = 0;
+                for (Task task : tasks) {
+                    maxTaskLen = Math.max(task.task().length(), maxTaskLen);
+                }
+                StringBuilder out = new StringBuilder();
+                if (maxTaskLen <= 4) {
+                    out.append("task | status\n")
+                            .append("-------------\n");
+                } else {
+                    out.append("task")
+                            .append(" ".repeat(maxTaskLen - 4))
+                            .append(" | status\n")
+                            .append("-".repeat(maxTaskLen + 9))
+                            .append("\n");
+                }
+                int finalMaxTaskLen = maxTaskLen;
+                tasks.forEach(task -> out.append(task.task())
+                        .append(" ".repeat(finalMaxTaskLen - task.task().length()))
+                        .append(" | ")
+                        .append(task.status())
+                        .append("\n"));
                 return out.toString();
             default:
                 log.error("not handle response {}", taskListResponse.repositoryResponse());
