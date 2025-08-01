@@ -56,6 +56,22 @@ public class TaskCommandHandler {
         }
     }
 
+    public String updateTask(String[] oldTask, String[] newTask) {
+        StringBuilder fullOldTask = new StringBuilder();
+        for (String word : oldTask) fullOldTask.append(word).append(" ");
+        StringBuilder fullNewTask = new StringBuilder();
+        for (String word : newTask) fullNewTask.append(word).append(" ");
+        RepositoryResponse repositoryResponse = taskService.updateTask(fullOldTask.toString().trim(), fullNewTask.toString().trim());
+        switch (repositoryResponse) {
+            case FILE_ERROR: return "file error";
+            case FILE_IS_EMPTY: return "file is empty";
+            case NO_SUCH_TASK: return "no such task";
+            case UNABLE_TASK: return "task already exist";
+            case OK: return "successful update";
+            default: return "unexpected error";
+        }
+    }
+
     public String taskList(String statusFilter) {
         if (!statusFilter.equalsIgnoreCase("notDone") && !statusFilter.equalsIgnoreCase("inProcess") && !statusFilter.equalsIgnoreCase("done") && !statusFilter.equalsIgnoreCase("none")) return "incorrect status expected notDone/inProcess/done";
         TaskListResponse taskListResponse = taskService.taskList(statusFilter);

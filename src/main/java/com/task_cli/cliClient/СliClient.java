@@ -25,6 +25,11 @@ public class СliClient {
         return taskCommandHandler.deleteTask(task);
     }
 
+    @ShellMethod(key = "update")
+    private String updateTask(@ShellOption String[] oldtask, @ShellOption String[] newtask) {
+        return taskCommandHandler.updateTask(oldtask, newtask);
+    }
+
     @ShellMethod(key = "ls")
     private String taskList(@ShellOption(defaultValue = "none") String statusFilter) {
         return taskCommandHandler.taskList(statusFilter);
