@@ -43,6 +43,19 @@ public class TaskCommandHandler {
         }
     }
 
+    public String deleteTask(String[] task) {
+        StringBuilder fullTask = new StringBuilder();
+        for (String word : task) fullTask.append(word).append(" ");
+        RepositoryResponse repositoryResponse = taskService.deleteTask(fullTask.toString().trim());
+        switch (repositoryResponse) {
+            case FILE_ERROR: return "file error";
+            case FILE_IS_EMPTY: return "file is empty";
+            case NO_SUCH_TASK: return "no such task";
+            case OK: return "successful delete";
+            default: return "unexpected error";
+        }
+    }
+
     public String taskList(String statusFilter) {
         if (!statusFilter.equalsIgnoreCase("notDone") && !statusFilter.equalsIgnoreCase("inProcess") && !statusFilter.equalsIgnoreCase("done") && !statusFilter.equalsIgnoreCase("none")) return "incorrect status expected notDone/inProcess/done";
         TaskListResponse taskListResponse = taskService.taskList(statusFilter);

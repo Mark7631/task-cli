@@ -21,5 +21,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public RepositoryResponse deleteTask(String task) {return taskRepository.deleteTask(task);}
+
+    @Override
     public TaskListResponse taskList(String statusFilter) { return taskRepository.taskList(statusFilter); }
 }

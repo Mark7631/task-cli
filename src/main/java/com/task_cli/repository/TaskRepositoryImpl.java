@@ -46,6 +46,31 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
+    public RepositoryResponse deleteTask(String task) {
+        try {
+            File file = new File(repoFilePath);
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<Task> tasks;
+            if (file.length() != 0) {
+                tasks = objectMapper.readValue(file, new TypeReference<List<Task>>() {});
+                for (int i = 0; i < tasks.size(); i++) {
+                    if (tasks.get(i).task().equalsIgnoreCase(task)) {
+                        tasks.remove(i);
+                        objectMapper.writeValue(file, tasks);
+                        return RepositoryResponse.OK;
+                    }
+                }
+                return RepositoryResponse.NO_SUCH_TASK;
+            } else {
+                return RepositoryResponse.FILE_IS_EMPTY;
+            }
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            return RepositoryResponse.FILE_ERROR;
+        }
+    }
+
+    @Override
     public TaskListResponse taskList(String statusFilter) {
         File file = new File(repoFilePath);
         if (!file.exists()) return new TaskListResponse(RepositoryResponse.FILE_NOT_EXIST, new ArrayList<>());

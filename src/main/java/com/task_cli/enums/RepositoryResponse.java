@@ -6,5 +6,6 @@ public enum RepositoryResponse {
     UNEXPECTED_ERROR,
     FILE_ERROR,
     FILE_NOT_EXIST,
-    FILE_IS_EMPTY
+    FILE_IS_EMPTY,
+    NO_SUCH_TASK
 }

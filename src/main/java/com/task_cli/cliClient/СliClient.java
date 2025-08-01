@@ -16,12 +16,17 @@ public class СliClient {
     }
 
     @ShellMethod(key = "add")
-    public String addTask(@ShellOption String[] task, @ShellOption(defaultValue = "notDone") String status) {
+    private String addTask(@ShellOption String[] task, @ShellOption(defaultValue = "notDone") String status) {
         return taskCommandHandler.addTask(task, status);
     }
 
+    @ShellMethod(key = "delete")
+    private String deleteTask(@ShellOption String[] task) {
+        return taskCommandHandler.deleteTask(task);
+    }
+
     @ShellMethod(key = "ls")
-    public String taskList(@ShellOption(defaultValue = "none") String statusFilter) {
+    private String taskList(@ShellOption(defaultValue = "none") String statusFilter) {
         return taskCommandHandler.taskList(statusFilter);
     }
 }
